@@ -258,7 +258,10 @@ class _HomeQuranReadState extends State<HomeQuranRead> {
           AsyncSnapshot snapshot,
         ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(
+              color: const Color.fromRGBO(254, 249, 205, 1),
+            ));
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               return const Text('Error');
