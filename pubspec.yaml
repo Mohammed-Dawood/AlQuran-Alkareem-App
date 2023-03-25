@@ -44,7 +44,10 @@ dependencies:
   floating_bottom_navigation_bar: ^1.5.2
   get_storage: ^2.1.1
   flutter_islamic_icons: ^1.0.2
-  flutter_qiblah: ^2.1.0
+  flutter_qiblah: 
+    git:
+      url: https://github.com/MoRmdn/flutter_qiblah # Repo
+      ref: master  # Branch name
   geolocator: ^9.0.2
   get: ^4.6.5
   adhan_dart: ^1.0.8
@@ -56,6 +59,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
 flutter_icons:
