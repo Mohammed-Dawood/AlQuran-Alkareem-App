@@ -97,7 +97,9 @@ class QiblahCompassWidget extends StatelessWidget {
       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: const Color.fromRGBO(254, 249, 205, 1),
+            ),
           );
         }
 
