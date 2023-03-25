@@ -345,7 +345,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               Text(
-                'الاصدار 1.1.2',
+                'الاصدار 1.2.0',
                 style: TextStyle(
                   fontSize: 20,
                   color: Color.fromRGBO(6, 87, 96, 1),
