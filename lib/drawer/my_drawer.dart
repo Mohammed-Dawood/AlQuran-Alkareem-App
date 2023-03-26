@@ -265,9 +265,14 @@ class _MyDrawerState extends State<MyDrawer> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    Share.share('https://qrco.de/AlQuran-AlKareem',
-                        subject: 'تطبيق القران الكريم');
+                  onPressed: () async {
+                    final box = context.findRenderObject() as RenderBox?;
+                    await Share.share(
+                      'https://qrco.de/AlQuran-AlKareem',
+                      subject: 'تطبيق القران الكريم',
+                      sharePositionOrigin:
+                          box!.localToGlobal(Offset.zero) & box.size,
+                    );
                   },
                 ),
               ),
