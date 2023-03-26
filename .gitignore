@@ -43,4 +43,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 **/android/key.properties
-**/android/app/com.mohammeddawood.quran-app-keystore.jks
+**/android/app/com.mohammeddawood.quran_app-keystore.jks
+
