@@ -1,16 +1,23 @@
-# quran_app
+تطبيق القرآن هو تطبيق يتيح للمستخدمين قراءة القرآن الكريم بسهولة ودون الحاجة إلى اتصال بالإنترنت. يمكن للمستخدم تكبير وتصغير حجم الخط لتسهيل القراءة وجعلها أكثر وضوحاً وسهولة.
+بالإضافة إلى ذلك، يحتوي التطبيق على سبحة إلكترونية للمستخدمين الذين يرغبون في استخدامها للتسبيح والذكر. ويتميز التطبيق بواجهة بسيطة وسهلة الاستخدام تتيح للمستخدم الوصول بسهولة إلى الآيات المراد قراءتها.
+يتميز التطبيق بميزة إضافية هامة، حيث يحتوي على دليل لاتجاه القبلة للمستخدمين الذين يرغبون في أداء الصلاة.
+يمكن للمستخدمين تنزيل التطبيق بسهولة من متجر التطبيقات الخاص بالهواتف الذكية، والبدء في استخدامه فوراً دون الحاجة إلى إنشاء حساب أو الاتصال بالإنترنت. ويتم تحديث التطبيق بشكل دوري لتوفير تجربة أفضل للمستخدمين.
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+https://qrco.de/AlQuran-AlKareem
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![11](https://user-images.githubusercontent.com/78726877/227898199-c0b5f8f4-d2b9-4340-b02b-b8f71af9052f.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![12](https://user-images.githubusercontent.com/78726877/227898209-98e71cbd-9ef7-4425-83c4-a8895033300f.png)
+
+![13](https://user-images.githubusercontent.com/78726877/227898216-ae8ed4dd-6adb-491a-8a9f-d7e2e14f61dc.png)
+
+![14](https://user-images.githubusercontent.com/78726877/227898219-a16f0fdc-43bd-4c3f-86f0-835b9b1974f7.png)
+
+![15](https://user-images.githubusercontent.com/78726877/227898222-4395fd5e-562d-4c14-85c6-dc8ed16d97ab.png)
+
+![16](https://user-images.githubusercontent.com/78726877/227898227-5e52b360-e0b6-4226-8c16-1df98ec394eb.png)
+
+![17](https://user-images.githubusercontent.com/78726877/227898233-df3d84ac-2ecb-4f2d-942b-40f7dccb4d4d.png)
