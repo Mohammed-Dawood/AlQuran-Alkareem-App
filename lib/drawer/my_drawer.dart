@@ -172,63 +172,73 @@ class _MyDrawerState extends State<MyDrawer> {
                   color: const Color.fromRGBO(6, 87, 96, 0.5),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: 30,
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text(
-              //         '${fontSize3.toInt()} ',
-              //         style: TextStyle(
-              //           fontSize: isScreenWidth(context) ? 20 : 22,
-              //           color: Color.fromRGBO(6, 87, 96, 1),
-              //           fontFamily: 'quran',
-              //           shadows: [
-              //             Shadow(
-              //               offset: Offset(.5, .5),
-              //               blurRadius: 1.0,
-              //               color: Color.fromRGBO(6, 87, 96, 1),
-              //             )
-              //           ],
-              //         ),
-              //       ),
-              //       Directionality(
-              //         textDirection: TextDirection.rtl,
-              //         child: Text(
-              //           'حجم خط الصلاة',
-              //           style: TextStyle(
-              //             fontSize: isScreenWidth(context) ? 20 : 22,
-              //             color: Color.fromRGBO(6, 87, 96, 1),
-              //             fontFamily: 'quran',
-              //             shadows: [
-              //               Shadow(
-              //                 offset: Offset(.5, .5),
-              //                 blurRadius: 1.0,
-              //                 color: Color.fromRGBO(6, 87, 96, 1),
-              //               )
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // Slider(
-              //   activeColor: const Color.fromRGBO(6, 87, 96, 1),
-              //   value: fontSize3,
-              //   min: 20,
-              //   max: 40,
-              //   onChanged: (value) {
-              //     setState(
-              //       () {
-              //         fontSize3 = value;
-              //       },
-              //     );
-              //     saveSettings();
-              //   },
-              // ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${fontSize3.toInt()} ',
+                      style: TextStyle(
+                        fontSize: isScreenWidth(context) ? 20 : 22,
+                        color: Color.fromRGBO(6, 87, 96, 1),
+                        fontFamily: 'quran',
+                        shadows: [
+                          Shadow(
+                            offset: Offset(.5, .5),
+                            blurRadius: 1.0,
+                            color: Color.fromRGBO(6, 87, 96, 1),
+                          )
+                        ],
+                      ),
+                    ),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Text(
+                        'حجم خط الصلاة',
+                        style: TextStyle(
+                          fontSize: isScreenWidth(context) ? 20 : 22,
+                          color: Color.fromRGBO(6, 87, 96, 1),
+                          fontFamily: 'quran',
+                          shadows: [
+                            Shadow(
+                              offset: Offset(.5, .5),
+                              blurRadius: 1.0,
+                              color: Color.fromRGBO(6, 87, 96, 1),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Slider(
+                  activeColor: const Color.fromRGBO(6, 87, 96, 1),
+                  value: fontSize3,
+                  min: 20,
+                  max: 40,
+                  onChanged: (value) {
+                    setState(
+                      () {
+                        fontSize3 = value;
+                      },
+                    );
+                    saveSettings();
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: const Divider(
+                  thickness: 0.5,
+                  color: const Color.fromRGBO(6, 87, 96, 0.5),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextButton(
