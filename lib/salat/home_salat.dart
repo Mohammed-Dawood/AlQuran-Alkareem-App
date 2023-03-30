@@ -1,10 +1,10 @@
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:quran_app/constant.dart';
 import 'package:adhan_dart/adhan_dart.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 class HomeSalat extends StatefulWidget {
   const HomeSalat({super.key});
@@ -14,12 +14,13 @@ class HomeSalat extends StatefulWidget {
 }
 
 class _HomeSalatState extends State<HomeSalat> {
-  late DateTime date;
   final box = GetStorage();
   late PrayerTimes prayerTimes;
   late Coordinates coordinates;
-  late CalculationParameters params;
-  bool get isTimePresenter => box.read('isTimePresenter') ?? true;
+  DateTime date = DateTime.now();
+  bool get isTimePresenter => box.read("isTimePresenter") ?? true;
+  CalculationParameters get params =>
+      box.read("params") ?? CalculationMethod.MuslimWorldLeague();
 
   bool isScreenWidth(BuildContext context) =>
       MediaQuery.of(context).size.width < 600;
@@ -38,11 +39,8 @@ class _HomeSalatState extends State<HomeSalat> {
 
   @override
   void initState() {
-    date = DateTime.now();
-    params = CalculationMethod.MuslimWorldLeague();
     coordinates = Coordinates(48.88849896670728, 2.238074852108114);
     prayerTimes = PrayerTimes(coordinates, date, params, precision: true);
-    // TODO: implement initState
     super.initState();
   }
 
