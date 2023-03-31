@@ -4,7 +4,7 @@ import 'location_error_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
-import 'package:quran_app/qiblah/loading_indicator.dart';
+import 'package:quran_app/controller/loading_indicator.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
 class QiblahCompass extends StatefulWidget {
@@ -96,11 +96,7 @@ class QiblahCompassWidget extends StatelessWidget {
       stream: FlutterQiblah.qiblahStream,
       builder: (_, AsyncSnapshot<QiblahDirection> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: const Color.fromRGBO(254, 249, 205, 1),
-            ),
-          );
+          return LoadingIndicator();
         }
 
         final qiblahDirection = snapshot.data!;

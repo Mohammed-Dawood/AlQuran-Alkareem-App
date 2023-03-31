@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:quran_app/constant.dart';
+import 'package:quran_app/controller/constant.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 

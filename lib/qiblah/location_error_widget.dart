@@ -1,5 +1,7 @@
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:quran_app/constant.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:quran_app/controller/constant.dart';
 
 class LocationErrorWidget extends StatelessWidget {
   final String? error;
@@ -65,7 +67,9 @@ class LocationErrorWidget extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              if (callback != null) callback!();
+              // if (callback != null) callback!();
+              Geolocator.openAppSettings();
+              Get.back();
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(

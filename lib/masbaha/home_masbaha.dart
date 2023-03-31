@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:quran_app/constant.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:quran_app/controller/constant.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 

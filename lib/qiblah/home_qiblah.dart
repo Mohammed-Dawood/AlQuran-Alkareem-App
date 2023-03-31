@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:quran_app/constant.dart';
+import 'package:quran_app/controller/constant.dart';
 import 'package:flutter_qiblah/flutter_qiblah.dart';
 import 'package:quran_app/qiblah/qiblah_compass.dart';
-import 'package:quran_app/qiblah/loading_indicator.dart';
+import 'package:quran_app/controller/loading_indicator.dart';
 
 class HomeQiblah extends StatefulWidget {
   const HomeQiblah({Key? key}) : super(key: key);
