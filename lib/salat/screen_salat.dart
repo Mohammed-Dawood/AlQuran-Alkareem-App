@@ -30,12 +30,13 @@ class _ScreenSalatState extends State<ScreenSalat> {
   String timePresenter(DateTime dateTime) {
     int minute = dateTime.minute;
     bool isGreaterThan12 = dateTime.hour > 12;
-    String prefix = dateTime.hour > 11 ? "pm" : "am";
+    // String prefix = dateTime.hour > 11 ? "pm" : "am";
     int hour = isGreaterThan12 ? dateTime.hour - 12 : dateTime.hour;
     String hourInString = hour.toString().length == 1 ? "0$hour" : "$hour";
     String minuteInString =
         minute.toString().length == 1 ? "0$minute" : "$minute";
-    return "$hourInString:$minuteInString $prefix";
+    // return "$hourInString:$minuteInString $prefix";
+    return "$hourInString:$minuteInString";
   }
 
   @override
