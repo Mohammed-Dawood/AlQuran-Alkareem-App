@@ -67,9 +67,8 @@ class LocationErrorWidget extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              // if (callback != null) callback!();
-              Geolocator.openAppSettings();
               Get.back();
+              Geolocator.openAppSettings();
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
