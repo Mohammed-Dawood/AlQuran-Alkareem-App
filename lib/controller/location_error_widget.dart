@@ -66,9 +66,10 @@ class LocationErrorWidget extends StatelessWidget {
                 ),
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               Get.back();
-              Geolocator.openAppSettings();
+              await Geolocator.openLocationSettings();
+              // Geolocator.openAppSettings();
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
