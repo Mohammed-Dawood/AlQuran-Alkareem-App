@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:adhan_dart/adhan_dart.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:quran_app/salat/home_salat.dart';
 import 'package:quran_app/controller/constant.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:quran_app/controller/get_current_location_controller.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 class ScreenSalat extends StatefulWidget {
@@ -16,13 +16,22 @@ class ScreenSalat extends StatefulWidget {
 }
 
 class _ScreenSalatState extends State<ScreenSalat> {
+  String? address;
   final box = GetStorage();
   Coordinates? coordinates;
   late PrayerTimes prayerTimes;
   DateTime date = DateTime.now();
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
-  CalculationParameters get params =>
-      box.read("params") ?? CalculationMethod.MuslimWorldLeague();
+  CalculationParameters get params => box.read("params") ?? salatHisab[5];
+
+  List salatHisab = [
+    CalculationMethod.Tehran(),
+    CalculationMethod.Karachi(),
+    CalculationMethod.Egyptian(),
+    CalculationMethod.UmmAlQura(),
+    CalculationMethod.NorthAmerica(),
+    CalculationMethod.MuslimWorldLeague(),
+  ];
 
   bool isScreenWidth(BuildContext context) =>
       MediaQuery.of(context).size.width < 600;
@@ -39,21 +48,33 @@ class _ScreenSalatState extends State<ScreenSalat> {
     return "$hourInString:$minuteInString";
   }
 
+  Future<void> getAddressFromLatLang(Position position) async {
+    List<Placemark> placemark =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark place = placemark[0];
+    setState(() {
+      address = '${place.locality},${place.country}';
+    });
+    print('${address} 2');
+  }
+
   @override
   void initState() {
-    HomeSalat();
-    getCurrentLocation().then((value) {
+    Geolocator.getCurrentPosition().then((Position position) {
       setState(() {
-        coordinates = Coordinates(value.latitude, value.longitude);
+        getAddressFromLatLang(position);
+        coordinates = Coordinates(position.latitude, position.longitude);
         prayerTimes = PrayerTimes(coordinates!, date, params, precision: true);
       });
     });
-
+    // getCurrentLocation().then((value) {});
+    print('${address} 1');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('${address} 3');
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: FloatingNavbar(
@@ -123,13 +144,10 @@ class _ScreenSalatState extends State<ScreenSalat> {
           child: coordinates == null
               ? LoadingIndicator()
               : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                      height: isScreenWidth(context) ? 50 : 60,
-                    ),
                     Text(
-                      'Mecca',
+                      '${address}',
                       style: TextStyle(
                         fontSize: fontSize3,
                         fontFamily: arabicFont,
@@ -144,328 +162,342 @@ class _ScreenSalatState extends State<ScreenSalat> {
                       ),
                       textDirection: TextDirection.rtl,
                     ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 30,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                isTimePresenter
+                                    ? "${timePresenter(prayerTimes.fajr!.toLocal())}"
+                                    : "${prayerTimes.fajr!.toLocal().hour}:${prayerTimes.fajr!.toLocal().minute}",
+                                style: TextStyle(
+                                  fontSize: fontSize3,
+                                  fontFamily: arabicFont,
+                                  color: const Color.fromRGBO(254, 249, 205, 1),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(.5, .5),
+                                      blurRadius: 1.0,
+                                      color: Color.fromRGBO(6, 87, 96, 1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "الفجر",
+                                    style: TextStyle(
+                                      fontSize: fontSize3,
+                                      fontFamily: arabicFont,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                      shadows: const [
+                                        Shadow(
+                                          offset: Offset(.5, .5),
+                                          blurRadius: 1.0,
+                                          color: Color.fromRGBO(6, 87, 96, 1),
+                                        )
+                                      ],
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    FlutterIslamicIcons.prayingPerson,
+                                    size: fontSize3,
+                                    color:
+                                        const Color.fromRGBO(254, 249, 205, 1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: const Color.fromRGBO(254, 249, 205, 1),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 30,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                isTimePresenter
+                                    ? "${timePresenter(prayerTimes.dhuhr!.toLocal())}"
+                                    : "${prayerTimes.dhuhr!.toLocal().hour}:${prayerTimes.dhuhr!.toLocal().minute}",
+                                style: TextStyle(
+                                  fontSize: fontSize3,
+                                  fontFamily: arabicFont,
+                                  color: const Color.fromRGBO(254, 249, 205, 1),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(.5, .5),
+                                      blurRadius: 1.0,
+                                      color: Color.fromRGBO(6, 87, 96, 1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "الظهر",
+                                    style: TextStyle(
+                                      fontSize: fontSize3,
+                                      fontFamily: arabicFont,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                      shadows: const [
+                                        Shadow(
+                                          offset: Offset(.5, .5),
+                                          blurRadius: 1.0,
+                                          color: Color.fromRGBO(6, 87, 96, 1),
+                                        )
+                                      ],
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    FlutterIslamicIcons.prayingPerson,
+                                    size: fontSize3,
+                                    color:
+                                        const Color.fromRGBO(254, 249, 205, 1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: const Color.fromRGBO(254, 249, 205, 1),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 30,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                isTimePresenter
+                                    ? "${timePresenter(prayerTimes.asr!.toLocal())}"
+                                    : "${prayerTimes.asr!.toLocal().hour}:${prayerTimes.asr!.toLocal().minute}",
+                                style: TextStyle(
+                                  fontSize: fontSize3,
+                                  fontFamily: arabicFont,
+                                  color: const Color.fromRGBO(254, 249, 205, 1),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(.5, .5),
+                                      blurRadius: 1.0,
+                                      color: Color.fromRGBO(6, 87, 96, 1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "العصر",
+                                    style: TextStyle(
+                                      fontSize: fontSize3,
+                                      fontFamily: arabicFont,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                      shadows: const [
+                                        Shadow(
+                                          offset: Offset(.5, .5),
+                                          blurRadius: 1.0,
+                                          color: Color.fromRGBO(6, 87, 96, 1),
+                                        )
+                                      ],
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    FlutterIslamicIcons.prayingPerson,
+                                    size: fontSize3,
+                                    color:
+                                        const Color.fromRGBO(254, 249, 205, 1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: const Color.fromRGBO(254, 249, 205, 1),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 30,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                isTimePresenter
+                                    ? "${timePresenter(prayerTimes.maghrib!.toLocal())}"
+                                    : "${prayerTimes.maghrib!.toLocal().hour}:${prayerTimes.maghrib!.toLocal().minute}",
+                                style: TextStyle(
+                                  fontSize: fontSize3,
+                                  fontFamily: arabicFont,
+                                  color: const Color.fromRGBO(254, 249, 205, 1),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(.5, .5),
+                                      blurRadius: 1.0,
+                                      color: Color.fromRGBO(6, 87, 96, 1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "المغرب",
+                                    style: TextStyle(
+                                      fontSize: fontSize3,
+                                      fontFamily: arabicFont,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                      shadows: const [
+                                        Shadow(
+                                          offset: Offset(.5, .5),
+                                          blurRadius: 1.0,
+                                          color: Color.fromRGBO(6, 87, 96, 1),
+                                        )
+                                      ],
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    FlutterIslamicIcons.prayingPerson,
+                                    size: fontSize3,
+                                    color:
+                                        const Color.fromRGBO(254, 249, 205, 1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: const Color.fromRGBO(254, 249, 205, 1),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 30,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                isTimePresenter
+                                    ? "${timePresenter(prayerTimes.isha!.toLocal())}"
+                                    : "${prayerTimes.isha!.toLocal().hour}:${prayerTimes.isha!.toLocal().minute}",
+                                style: TextStyle(
+                                  fontSize: fontSize3,
+                                  fontFamily: arabicFont,
+                                  color: const Color.fromRGBO(254, 249, 205, 1),
+                                  shadows: const [
+                                    Shadow(
+                                      offset: Offset(.5, .5),
+                                      blurRadius: 1.0,
+                                      color: Color.fromRGBO(6, 87, 96, 1),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "العشاء",
+                                    style: TextStyle(
+                                      fontSize: fontSize3,
+                                      fontFamily: arabicFont,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                      shadows: const [
+                                        Shadow(
+                                          offset: Offset(.5, .5),
+                                          blurRadius: 1.0,
+                                          color: Color.fromRGBO(6, 87, 96, 1),
+                                        )
+                                      ],
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Icon(
+                                    FlutterIslamicIcons.prayingPerson,
+                                    size: fontSize3,
+                                    color:
+                                        const Color.fromRGBO(254, 249, 205, 1),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: const Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: const Color.fromRGBO(254, 249, 205, 1),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(
                       height: isScreenWidth(context) ? 50 : 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isTimePresenter
-                                ? "${timePresenter(prayerTimes.fajr!.toLocal())}"
-                                : "${prayerTimes.fajr!.toLocal().hour}:${prayerTimes.fajr!.toLocal().minute}",
-                            style: TextStyle(
-                              fontSize: fontSize3,
-                              fontFamily: arabicFont,
-                              color: const Color.fromRGBO(254, 249, 205, 1),
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(.5, .5),
-                                  blurRadius: 1.0,
-                                  color: Color.fromRGBO(6, 87, 96, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "الفجر",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FlutterIslamicIcons.prayingPerson,
-                                size: fontSize3,
-                                color: const Color.fromRGBO(254, 249, 205, 1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isTimePresenter
-                                ? "${timePresenter(prayerTimes.dhuhr!.toLocal())}"
-                                : "${prayerTimes.dhuhr!.toLocal().hour}:${prayerTimes.dhuhr!.toLocal().minute}",
-                            style: TextStyle(
-                              fontSize: fontSize3,
-                              fontFamily: arabicFont,
-                              color: const Color.fromRGBO(254, 249, 205, 1),
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(.5, .5),
-                                  blurRadius: 1.0,
-                                  color: Color.fromRGBO(6, 87, 96, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "الظهر",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FlutterIslamicIcons.prayingPerson,
-                                size: fontSize3,
-                                color: const Color.fromRGBO(254, 249, 205, 1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isTimePresenter
-                                ? "${timePresenter(prayerTimes.asr!.toLocal())}"
-                                : "${prayerTimes.asr!.toLocal().hour}:${prayerTimes.asr!.toLocal().minute}",
-                            style: TextStyle(
-                              fontSize: fontSize3,
-                              fontFamily: arabicFont,
-                              color: const Color.fromRGBO(254, 249, 205, 1),
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(.5, .5),
-                                  blurRadius: 1.0,
-                                  color: Color.fromRGBO(6, 87, 96, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "العصر",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FlutterIslamicIcons.prayingPerson,
-                                size: fontSize3,
-                                color: const Color.fromRGBO(254, 249, 205, 1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isTimePresenter
-                                ? "${timePresenter(prayerTimes.maghrib!.toLocal())}"
-                                : "${prayerTimes.maghrib!.toLocal().hour}:${prayerTimes.maghrib!.toLocal().minute}",
-                            style: TextStyle(
-                              fontSize: fontSize3,
-                              fontFamily: arabicFont,
-                              color: const Color.fromRGBO(254, 249, 205, 1),
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(.5, .5),
-                                  blurRadius: 1.0,
-                                  color: Color.fromRGBO(6, 87, 96, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "المغرب",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FlutterIslamicIcons.prayingPerson,
-                                size: fontSize3,
-                                color: const Color.fromRGBO(254, 249, 205, 1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            isTimePresenter
-                                ? "${timePresenter(prayerTimes.isha!.toLocal())}"
-                                : "${prayerTimes.isha!.toLocal().hour}:${prayerTimes.isha!.toLocal().minute}",
-                            style: TextStyle(
-                              fontSize: fontSize3,
-                              fontFamily: arabicFont,
-                              color: const Color.fromRGBO(254, 249, 205, 1),
-                              shadows: const [
-                                Shadow(
-                                  offset: Offset(.5, .5),
-                                  blurRadius: 1.0,
-                                  color: Color.fromRGBO(6, 87, 96, 1),
-                                )
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "العشاء",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                                textDirection: TextDirection.rtl,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FlutterIslamicIcons.prayingPerson,
-                                size: fontSize3,
-                                color: const Color.fromRGBO(254, 249, 205, 1),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                      ),
                     ),
                   ],
                 ),

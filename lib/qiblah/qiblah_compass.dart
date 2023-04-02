@@ -43,7 +43,7 @@ class _QiblahCompassState extends State<QiblahCompass> {
 
               case LocationPermission.denied:
                 return LocationErrorWidget(
-                  error: "رفض إذن خدمة الموقع",
+                  error: "رفض إذن خدمة تحديد الموقع",
                   callback: _checkLocationStatus,
                 );
 
