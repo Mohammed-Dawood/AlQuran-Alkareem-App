@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:adhan_dart/adhan_dart.dart';
@@ -195,7 +196,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                 )
                               ],
                             ),
-                            textDirection: TextDirection.rtl,
                           ),
                           Text(
                             '${address}',
@@ -211,7 +211,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                 )
                               ],
                             ),
-                            textDirection: TextDirection.rtl,
                           ),
                         ],
                       ),
@@ -229,7 +228,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               Text(
                                 isTimePresenter
                                     ? "${timePresenter(prayerTimes.fajr!.toLocal())}"
-                                    : "${prayerTimes.fajr!.toLocal().hour}:${prayerTimes.fajr!.toLocal().minute}",
+                                    : "${DateFormat.Hm("en").format(prayerTimes.fajr!.toLocal())}",
                                 style: TextStyle(
                                   fontSize: fontSize3,
                                   fontFamily: arabicFont,
@@ -260,7 +259,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                         )
                                       ],
                                     ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -295,7 +293,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               Text(
                                 isTimePresenter
                                     ? "${timePresenter(prayerTimes.dhuhr!.toLocal())}"
-                                    : "${prayerTimes.dhuhr!.toLocal().hour}:${prayerTimes.dhuhr!.toLocal().minute}",
+                                    : "${DateFormat.Hm("en").format(prayerTimes.dhuhr!.toLocal())}",
                                 style: TextStyle(
                                   fontSize: fontSize3,
                                   fontFamily: arabicFont,
@@ -326,7 +324,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                         )
                                       ],
                                     ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -361,7 +358,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               Text(
                                 isTimePresenter
                                     ? "${timePresenter(prayerTimes.asr!.toLocal())}"
-                                    : "${prayerTimes.asr!.toLocal().hour}:${prayerTimes.asr!.toLocal().minute}",
+                                    : "${DateFormat.Hm("en").format(prayerTimes.asr!.toLocal())}",
                                 style: TextStyle(
                                   fontSize: fontSize3,
                                   fontFamily: arabicFont,
@@ -392,7 +389,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                         )
                                       ],
                                     ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -427,7 +423,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               Text(
                                 isTimePresenter
                                     ? "${timePresenter(prayerTimes.maghrib!.toLocal())}"
-                                    : "${prayerTimes.maghrib!.toLocal().hour}:${prayerTimes.maghrib!.toLocal().minute}",
+                                    : "${DateFormat.Hm("en").format(prayerTimes.maghrib!.toLocal())}",
                                 style: TextStyle(
                                   fontSize: fontSize3,
                                   fontFamily: arabicFont,
@@ -458,7 +454,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                         )
                                       ],
                                     ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -493,7 +488,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               Text(
                                 isTimePresenter
                                     ? "${timePresenter(prayerTimes.isha!.toLocal())}"
-                                    : "${prayerTimes.isha!.toLocal().hour}:${prayerTimes.isha!.toLocal().minute}",
+                                    : "${DateFormat.Hm("en").format(prayerTimes.isha!.toLocal())}",
                                 style: TextStyle(
                                   fontSize: fontSize3,
                                   fontFamily: arabicFont,
@@ -524,7 +519,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                         )
                                       ],
                                     ),
-                                    textDirection: TextDirection.rtl,
                                   ),
                                   SizedBox(
                                     width: 10,

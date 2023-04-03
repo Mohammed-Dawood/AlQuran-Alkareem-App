@@ -54,6 +54,7 @@ dependencies:
   timezone: ^0.9.1
   flutter_launcher_icons: ^0.12.0
   geocoding: ^2.1.0
+  intl: ^0.18.0
   
 
 
