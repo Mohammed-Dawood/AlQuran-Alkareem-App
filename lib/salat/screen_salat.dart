@@ -21,10 +21,12 @@ class _ScreenSalatState extends State<ScreenSalat> {
   Coordinates? coordinates;
   late PrayerTimes prayerTimes;
   DateTime date = DateTime.now();
+  // int get i => box.read("i") ?? 5;
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
-  CalculationParameters get params => box.read("params") ?? salatHisab[5];
+  // CalculationParameters get params => box.read("params") ?? paramsList[5];
+  CalculationParameters params = CalculationMethod.MuslimWorldLeague();
 
-  List salatHisab = [
+  List paramsList = [
     CalculationMethod.Tehran(),
     CalculationMethod.Karachi(),
     CalculationMethod.Egyptian(),
@@ -49,13 +51,15 @@ class _ScreenSalatState extends State<ScreenSalat> {
   }
 
   Future<void> getAddressFromLatLang(Position position) async {
-    List<Placemark> placemark =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<Placemark> placemark = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+      localeIdentifier: "ar_SA",
+    );
     Placemark place = placemark[0];
     setState(() {
-      address = '${place.locality},${place.country}';
+      address = '${place.country} - ${place.locality}';
     });
-    print('${address} 2');
   }
 
   @override
@@ -68,13 +72,11 @@ class _ScreenSalatState extends State<ScreenSalat> {
       });
     });
     // getCurrentLocation().then((value) {});
-    print('${address} 1');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('${address} 3');
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: FloatingNavbar(
@@ -97,12 +99,12 @@ class _ScreenSalatState extends State<ScreenSalat> {
         ),
         items: [
           FloatingNavbarItem(
-            icon: Icons.watch_later_outlined,
+            icon: FlutterIslamicIcons.iftar,
             title: isTimePresenter ? "12" : "24",
           ),
           FloatingNavbarItem(
-            icon: Icons.restore,
-            title: "تصفير",
+            icon: FlutterIslamicIcons.crescentMoon,
+            title: "المركز",
           ),
           FloatingNavbarItem(
             icon: FlutterIslamicIcons.tasbihHand,
@@ -115,7 +117,21 @@ class _ScreenSalatState extends State<ScreenSalat> {
               box.write("isTimePresenter", !isTimePresenter);
             });
           }
-          if (screenNumber == 1) {}
+          if (screenNumber == 1) {
+            // if (i < paramsList.length - 1) {
+            //   setState(() {
+            //     print(i);
+            //     box.write("i", i + 1);
+            //     print(i);
+            //     box.write("params", paramsList[i]);
+            //   });
+            // } else {
+            //   setState(() {
+            //     box.write("i", 0);
+            //     box.write("params", paramsList[0]);
+            //   });
+            // }
+          }
           if (screenNumber == 2) {}
         },
       ),
@@ -146,6 +162,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    // Text(
+                    //   '${i}',
+                    //   style: TextStyle(
+                    //     fontSize: fontSize3,
+                    //     fontFamily: arabicFont,
+                    //     color: const Color.fromRGBO(254, 249, 205, 1),
+                    //     shadows: const [
+                    //       Shadow(
+                    //         offset: Offset(.5, .5),
+                    //         blurRadius: 1.0,
+                    //         color: Color.fromRGBO(6, 87, 96, 1),
+                    //       )
+                    //     ],
+                    //   ),
+                    //   textDirection: TextDirection.rtl,
+                    // ),
                     Text(
                       '${address}',
                       style: TextStyle(
