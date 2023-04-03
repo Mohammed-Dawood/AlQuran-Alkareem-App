@@ -21,10 +21,9 @@ class _ScreenSalatState extends State<ScreenSalat> {
   Coordinates? coordinates;
   late PrayerTimes prayerTimes;
   DateTime date = DateTime.now();
-  // int get i => box.read("i") ?? 5;
+  int get i => box.read("i") ?? 5;
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
-  // CalculationParameters get params => box.read("params") ?? paramsList[5];
-  CalculationParameters params = CalculationMethod.MuslimWorldLeague();
+  CalculationParameters get params => box.read("params") ?? paramsList[5];
 
   List paramsList = [
     CalculationMethod.Tehran(),
@@ -33,6 +32,15 @@ class _ScreenSalatState extends State<ScreenSalat> {
     CalculationMethod.UmmAlQura(),
     CalculationMethod.NorthAmerica(),
     CalculationMethod.MuslimWorldLeague(),
+  ];
+
+  List paramsListName = [
+    "جامعة طهران",
+    "جامعة العلوم الاسلامية، كراتشي",
+    "الهيئة المصرية العامة للمساحة",
+    "جامعة أم القرى بمكة المكرمة",
+    "الجمعية الاسلامية لامريكا الشمالية",
+    "رابطة العالم الإسلامي",
   ];
 
   bool isScreenWidth(BuildContext context) =>
@@ -62,8 +70,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
     });
   }
 
-  @override
-  void initState() {
+  void getPrayerTime() {
     Geolocator.getCurrentPosition().then((Position position) {
       setState(() {
         getAddressFromLatLang(position);
@@ -71,7 +78,11 @@ class _ScreenSalatState extends State<ScreenSalat> {
         prayerTimes = PrayerTimes(coordinates!, date, params, precision: true);
       });
     });
-    // getCurrentLocation().then((value) {});
+  }
+
+  @override
+  void initState() {
+    getPrayerTime();
     super.initState();
   }
 
@@ -87,7 +98,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
         iconSize: isScreenWidth(context) ? 25 : 28,
         backgroundColor: const Color.fromRGBO(6, 87, 96, 1),
         selectedItemColor: const Color.fromRGBO(254, 249, 205, 1),
-        unselectedItemColor: const Color.fromRGBO(6, 87, 96, 1),
+        unselectedItemColor: const Color.fromRGBO(254, 249, 205, 1),
         selectedBackgroundColor: const Color.fromRGBO(6, 87, 96, 1),
         margin: const EdgeInsets.symmetric(
           vertical: 10,
@@ -118,19 +129,21 @@ class _ScreenSalatState extends State<ScreenSalat> {
             });
           }
           if (screenNumber == 1) {
-            // if (i < paramsList.length - 1) {
-            //   setState(() {
-            //     print(i);
-            //     box.write("i", i + 1);
-            //     print(i);
-            //     box.write("params", paramsList[i]);
-            //   });
-            // } else {
-            //   setState(() {
-            //     box.write("i", 0);
-            //     box.write("params", paramsList[0]);
-            //   });
-            // }
+            if (i < paramsList.length - 1) {
+              setState(() {
+                int newI = i + 1;
+                box.write("i", newI);
+                box.write("params", paramsList[newI]);
+                getPrayerTime();
+              });
+            } else {
+              setState(() {
+                int newI = 0;
+                box.write("i", newI);
+                box.write("params", paramsList[newI]);
+                getPrayerTime();
+              });
+            }
           }
           if (screenNumber == 2) {}
         },
@@ -162,37 +175,46 @@ class _ScreenSalatState extends State<ScreenSalat> {
               : Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // Text(
-                    //   '${i}',
-                    //   style: TextStyle(
-                    //     fontSize: fontSize3,
-                    //     fontFamily: arabicFont,
-                    //     color: const Color.fromRGBO(254, 249, 205, 1),
-                    //     shadows: const [
-                    //       Shadow(
-                    //         offset: Offset(.5, .5),
-                    //         blurRadius: 1.0,
-                    //         color: Color.fromRGBO(6, 87, 96, 1),
-                    //       )
-                    //     ],
-                    //   ),
-                    //   textDirection: TextDirection.rtl,
-                    // ),
-                    Text(
-                      '${address}',
-                      style: TextStyle(
-                        fontSize: fontSize3,
-                        fontFamily: arabicFont,
-                        color: const Color.fromRGBO(254, 249, 205, 1),
-                        shadows: const [
-                          Shadow(
-                            offset: Offset(.5, .5),
-                            blurRadius: 1.0,
-                            color: Color.fromRGBO(6, 87, 96, 1),
-                          )
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '${paramsListName[i]}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: arabicFont,
+                              color: const Color.fromRGBO(254, 249, 205, 1),
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(.5, .5),
+                                  blurRadius: 1.0,
+                                  color: Color.fromRGBO(6, 87, 96, 1),
+                                )
+                              ],
+                            ),
+                            textDirection: TextDirection.rtl,
+                          ),
+                          Text(
+                            '${address}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: arabicFont,
+                              color: const Color.fromRGBO(254, 249, 205, 1),
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(.5, .5),
+                                  blurRadius: 1.0,
+                                  color: Color.fromRGBO(6, 87, 96, 1),
+                                )
+                              ],
+                            ),
+                            textDirection: TextDirection.rtl,
+                          ),
                         ],
                       ),
-                      textDirection: TextDirection.rtl,
                     ),
                     Column(
                       children: [
