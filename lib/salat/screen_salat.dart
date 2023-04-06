@@ -25,9 +25,9 @@ class _ScreenSalatState extends State<ScreenSalat> {
   DateTime date = DateTime.now();
   int get i => box.read("i") ?? 5;
   HijriCalendar hijriDate = HijriCalendar.now();
+  CalculationParameters get params => paramsList[i];
   bool get isHijriDate => box.read("isHijriDate") ?? true;
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
-  CalculationParameters get params => box.read("params") ?? paramsList[5];
 
   List paramsList = [
     CalculationMethod.Tehran(),
@@ -92,6 +92,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
 
   @override
   Widget build(BuildContext context) {
+    print(i);
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: FloatingNavbar(
@@ -135,17 +136,11 @@ class _ScreenSalatState extends State<ScreenSalat> {
           if (screenNumber == 1) {
             if (i < paramsList.length - 1) {
               setState(() {
-                int newI = i + 1;
-                box.write("i", newI);
-                box.write("params", paramsList[newI]);
-                getPrayerTime();
+                box.write("i", i + 1);
               });
             } else {
               setState(() {
-                int newI = 0;
-                box.write("i", newI);
-                box.write("params", paramsList[newI]);
-                getPrayerTime();
+                box.write("i", 0);
               });
             }
           }

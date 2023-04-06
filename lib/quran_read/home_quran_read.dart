@@ -2,6 +2,7 @@ import 'surah_builder.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:quran_app/controller/constant.dart';
+import 'package:quran_app/controller/loading_indicator.dart';
 // import 'package:quran_app/quran_read/arabic_sura_number.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
@@ -26,15 +27,12 @@ class _HomeQuranReadState extends State<HomeQuranRead> {
         onPressed: () async {
           fabIsClicked = true;
           if (await readBookmark() == true) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SurahBuilder(
-                  arabic: quran[0],
-                  sura: bookmarkedSura - 1,
-                  suraName: arabicName[bookmarkedSura - 1]['name'],
-                  ayah: bookmarkedAyah,
-                ),
+            Get.to(
+              SurahBuilder(
+                arabic: quran[0],
+                sura: bookmarkedSura - 1,
+                suraName: arabicName[bookmarkedSura - 1]['name'],
+                ayah: bookmarkedAyah,
               ),
             );
           } else {
@@ -258,17 +256,14 @@ class _HomeQuranReadState extends State<HomeQuranRead> {
           AsyncSnapshot snapshot,
         ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: const Color.fromRGBO(254, 249, 205, 1),
-            ));
+            return LoadingIndicator();
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return const Text('Error');
+              return const Text('خطأ');
             } else if (snapshot.hasData) {
               return indexCreator(snapshot.data, context);
             } else {
-              return const Text('Empty data');
+              return const Text('بيانات فارغة');
             }
           } else {
             return Text('State: ${snapshot.connectionState}');
