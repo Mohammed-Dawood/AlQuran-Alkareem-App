@@ -80,6 +80,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
         getAddressFromLatLang(position);
         coordinates = Coordinates(position.latitude, position.longitude);
         prayerTimes = PrayerTimes(coordinates!, date, params, precision: true);
+        print("hello");
       });
     });
   }
@@ -137,10 +138,12 @@ class _ScreenSalatState extends State<ScreenSalat> {
             if (i < paramsList.length - 1) {
               setState(() {
                 box.write("i", i + 1);
+                getPrayerTime();
               });
             } else {
               setState(() {
                 box.write("i", 0);
+                getPrayerTime();
               });
             }
           }
