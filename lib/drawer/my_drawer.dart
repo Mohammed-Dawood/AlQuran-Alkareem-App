@@ -331,7 +331,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   onPressed: () async {
                     Uri mail = Uri.parse(
-                      "mailto:contact@mddigitaldevelopment.com?subject=QR Maker App&body=السلام عليكم,",
+                      "mailto:contact@mddigitaldevelopment.com?subject=تطبيق القران الكريم&body=السلام عليكم",
                     );
                     if (await canLaunchUrl(mail)) {
                       await launchUrl(mail);
@@ -360,7 +360,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               Text(
-                'الاصدار  1.3.2',
+                'الاصدار  1.3.3',
                 style: TextStyle(
                   fontSize: 20,
                   color: Color.fromRGBO(6, 87, 96, 1),

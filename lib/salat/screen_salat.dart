@@ -220,7 +220,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             ),
                           ),
                           Text(
-                            '${address}',
+                            address == null ? "" : '${address}',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: arabicFont,
