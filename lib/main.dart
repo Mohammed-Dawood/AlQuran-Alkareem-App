@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:quran_app/theme/theme.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:quran_app/salat/home_salat.dart';
 import 'package:quran_app/controller/constant.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:quran_app/salat/notification_salat.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 
@@ -14,10 +16,29 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  NotificationSalat().initNotification(initScheduled: true);
+  listenNotification();
+  listenNotificationBackground();
   await initialization(null);
   await GetStorage.init();
   runApp(const MyApp());
 }
+
+void listenNotification() => NotificationSalat()
+    .onNotifications
+    .stream
+    .listen(onDidReceiveNotificationResponse);
+
+void listenNotificationBackground() => NotificationSalat()
+    .onNotifications
+    .stream
+    .listen(onDidReceiveBackgroundNotificationResponse);
+
+void onDidReceiveNotificationResponse(NotificationResponse) =>
+    Get.to(() => HomeSalat());
+
+void onDidReceiveBackgroundNotificationResponse(NotificationResponse) =>
+    Get.to(() => HomeSalat());
 
 Future initialization(BuildContext? context) async {
   // await Future.delayed(const Duration(seconds: 3));

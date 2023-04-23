@@ -6,6 +6,7 @@ import 'package:adhan_dart/adhan_dart.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:quran_app/controller/constant.dart';
+import 'package:quran_app/salat/notification_salat.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
@@ -27,6 +28,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
   HijriCalendar hijriDate = HijriCalendar.now();
   CalculationParameters get params => paramsList[i];
   bool get isHijriDate => box.read("isHijriDate") ?? true;
+  bool get isNotifications => box.read("isNotifications") ?? true;
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
 
   List paramsList = [
@@ -80,7 +82,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
         getAddressFromLatLang(position);
         coordinates = Coordinates(position.latitude, position.longitude);
         prayerTimes = PrayerTimes(coordinates!, date, params, precision: true);
-        print("hello");
       });
     });
   }
@@ -93,7 +94,6 @@ class _ScreenSalatState extends State<ScreenSalat> {
 
   @override
   Widget build(BuildContext context) {
-    print(i);
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: FloatingNavbar(
@@ -239,61 +239,82 @@ class _ScreenSalatState extends State<ScreenSalat> {
                     ),
                     Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isTimePresenter
-                                    ? "${timePresenter(prayerTimes.fajr!.toLocal())}"
-                                    : "${DateFormat.Hm().format(prayerTimes.fajr!.toLocal())}",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "الفجر",
-                                    style: TextStyle(
-                                      fontSize: fontSize3,
-                                      fontFamily: arabicFont,
-                                      color: const Color.fromRGBO(
-                                          254, 249, 205, 1),
-                                      shadows: const [
-                                        Shadow(
-                                          offset: Offset(.5, .5),
-                                          blurRadius: 1.0,
-                                          color: Color.fromRGBO(6, 87, 96, 1),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    FlutterIslamicIcons.prayingPerson,
-                                    size: fontSize3,
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              box.write("isNotifications", !isNotifications);
+                            });
+                            isNotifications
+                                ? await NotificationSalat()
+                                    .showScheduleNotification(
+                                    id: 0,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان الفجر",
+                                    payLoad: "Pay Load",
+                                    scheduledDate: DateTime.now(),
+                                    // prayerTimes.fajr!.toLocal(),
+                                  )
+                                : await await NotificationSalat()
+                                    .NotificationCancel(id: 0);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  isTimePresenter
+                                      ? "${timePresenter(prayerTimes.fajr!.toLocal())}"
+                                      : "${DateFormat.Hm().format(prayerTimes.fajr!.toLocal())}",
+                                  style: TextStyle(
+                                    fontSize: fontSize3,
+                                    fontFamily: arabicFont,
                                     color:
                                         const Color.fromRGBO(254, 249, 205, 1),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(.5, .5),
+                                        blurRadius: 1.0,
+                                        color: Color.fromRGBO(6, 87, 96, 1),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "الفجر",
+                                      style: TextStyle(
+                                        fontSize: fontSize3,
+                                        fontFamily: arabicFont,
+                                        color: const Color.fromRGBO(
+                                            254, 249, 205, 1),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(.5, .5),
+                                            blurRadius: 1.0,
+                                            color: Color.fromRGBO(6, 87, 96, 1),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      isNotifications
+                                          ? Icons.notifications_active_outlined
+                                          : Icons.notifications_off_outlined,
+                                      size: fontSize3,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
