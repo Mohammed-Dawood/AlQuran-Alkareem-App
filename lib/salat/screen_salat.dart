@@ -1,16 +1,16 @@
-import 'package:adhan_dart/adhan_dart.dart';
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:adhan_dart/adhan_dart.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hijri/hijri_calendar.dart';
-import 'package:intl/intl.dart';
 import 'package:quran_app/controller/constant.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
+import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:quran_app/utils/awesome_notification_manager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 class ScreenSalat extends StatefulWidget {
   const ScreenSalat({super.key});
@@ -356,8 +356,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -445,8 +444,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -543,8 +541,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -632,8 +629,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
