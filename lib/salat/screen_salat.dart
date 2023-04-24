@@ -1,15 +1,16 @@
-import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:adhan_dart/adhan_dart.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
 import 'package:quran_app/controller/constant.dart';
-import 'package:quran_app/salat/notification_salat.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
-import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
+import 'package:quran_app/utils/awesome_notification_manager.dart';
 
 class ScreenSalat extends StatefulWidget {
   const ScreenSalat({super.key});
@@ -28,8 +29,14 @@ class _ScreenSalatState extends State<ScreenSalat> {
   HijriCalendar hijriDate = HijriCalendar.now();
   CalculationParameters get params => paramsList[i];
   bool get isHijriDate => box.read("isHijriDate") ?? true;
-  bool get isNotifications => box.read("isNotifications") ?? true;
   bool get isTimePresenter => box.read("isTimePresenter") ?? true;
+
+  //? if null (??) means that it is False user didn't activated it
+  bool get isFajr => box.read("isFajr") ?? false;
+  bool get isDhuhr => box.read("isDhuhr") ?? false;
+  bool get isAsr => box.read("isAsr") ?? false;
+  bool get isMaghrib => box.read("isMaghrib") ?? false;
+  bool get isIsha => box.read("isIsha") ?? false;
 
   List paramsList = [
     CalculationMethod.Tehran(),
@@ -242,20 +249,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
                         TextButton(
                           onPressed: () async {
                             setState(() {
-                              box.write("isNotifications", !isNotifications);
+                              box.write("isFajr", !isFajr);
                             });
-                            isNotifications
-                                ? await NotificationSalat()
-                                    .showScheduleNotification(
-                                    id: 0,
-                                    title: "القرآن الكريم",
-                                    body: "حان الان موعد اذان الفجر",
-                                    payLoad: "Pay Load",
-                                    scheduledDate: DateTime.now(),
-                                    // prayerTimes.fajr!.toLocal(),
-                                  )
-                                : await await NotificationSalat()
-                                    .NotificationCancel(id: 0);
+
+                            isFajr
+                                ? await awesomeNotificationManager
+                                    .addCustomDailyReminder(
+                                        id: 0,
+                                        title: "القرآن الكريم",
+                                        body: "حان الان موعد اذان الفجر",
+                                        time: Time(
+                                          prayerTimes.fajr!.hour,
+                                          prayerTimes.fajr!.minute,
+                                        ),
+                                        payload: "الفجر")
+                                : await awesomeNotificationManager
+                                    .cancelNotificationById(id: 0);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -304,7 +313,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                                       width: 10,
                                     ),
                                     Icon(
-                                      isNotifications
+                                      isFajr
                                           ? Icons.notifications_active_outlined
                                           : Icons.notifications_off_outlined,
                                       size: fontSize3,
@@ -325,61 +334,85 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             color: const Color.fromRGBO(254, 249, 205, 1),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isTimePresenter
-                                    ? "${timePresenter(prayerTimes.dhuhr!.toLocal())}"
-                                    : "${DateFormat.Hm().format(prayerTimes.dhuhr!.toLocal())}",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "الظهر",
-                                    style: TextStyle(
-                                      fontSize: fontSize3,
-                                      fontFamily: arabicFont,
-                                      color: const Color.fromRGBO(
-                                          254, 249, 205, 1),
-                                      shadows: const [
-                                        Shadow(
-                                          offset: Offset(.5, .5),
-                                          blurRadius: 1.0,
-                                          color: Color.fromRGBO(6, 87, 96, 1),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    FlutterIslamicIcons.prayingPerson,
-                                    size: fontSize3,
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              box.write("isDhuhr", !isDhuhr);
+                            });
+
+                            isDhuhr
+                                ? await awesomeNotificationManager
+                                    .addCustomDailyReminder(
+                                        id: 1,
+                                        title: "القرآن الكريم",
+                                        body: "حان الان موعد اذان الظهر",
+                                        time: Time(
+                                          prayerTimes.dhuhr!.hour,
+                                          prayerTimes.dhuhr!.minute,
+                                        ),
+                                        payload: "الظهر")
+                                : await awesomeNotificationManager
+                                    .cancelNotificationById(id: 1);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  isTimePresenter
+                                      ? "${timePresenter(prayerTimes.dhuhr!.toLocal())}"
+                                      : "${DateFormat.Hm().format(prayerTimes.dhuhr!.toLocal())}",
+                                  style: TextStyle(
+                                    fontSize: fontSize3,
+                                    fontFamily: arabicFont,
                                     color:
                                         const Color.fromRGBO(254, 249, 205, 1),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(.5, .5),
+                                        blurRadius: 1.0,
+                                        color: Color.fromRGBO(6, 87, 96, 1),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "الظهر",
+                                      style: TextStyle(
+                                        fontSize: fontSize3,
+                                        fontFamily: arabicFont,
+                                        color: const Color.fromRGBO(
+                                            254, 249, 205, 1),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(.5, .5),
+                                            blurRadius: 1.0,
+                                            color: Color.fromRGBO(6, 87, 96, 1),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      isDhuhr
+                                          ? Icons.notifications_active_outlined
+                                          : Icons.notifications_off_outlined,
+                                      size: fontSize3,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
@@ -390,61 +423,85 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             color: const Color.fromRGBO(254, 249, 205, 1),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isTimePresenter
-                                    ? "${timePresenter(prayerTimes.asr!.toLocal())}"
-                                    : "${DateFormat.Hm().format(prayerTimes.asr!.toLocal())}",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "العصر",
-                                    style: TextStyle(
-                                      fontSize: fontSize3,
-                                      fontFamily: arabicFont,
-                                      color: const Color.fromRGBO(
-                                          254, 249, 205, 1),
-                                      shadows: const [
-                                        Shadow(
-                                          offset: Offset(.5, .5),
-                                          blurRadius: 1.0,
-                                          color: Color.fromRGBO(6, 87, 96, 1),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    FlutterIslamicIcons.prayingPerson,
-                                    size: fontSize3,
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              box.write("isAsr", !isAsr);
+                            });
+
+                            isAsr
+                                ? await awesomeNotificationManager
+                                    .addCustomDailyReminder(
+                                        id: 2,
+                                        title: "القرآن الكريم",
+                                        body: "حان الان موعد اذان العصر",
+                                        time: Time(
+                                          prayerTimes.asr!.hour,
+                                          prayerTimes.asr!.minute,
+                                        ),
+                                        payload: "العصر")
+                                : await awesomeNotificationManager
+                                    .cancelNotificationById(id: 2);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  isTimePresenter
+                                      ? "${timePresenter(prayerTimes.asr!.toLocal())}"
+                                      : "${DateFormat.Hm().format(prayerTimes.asr!.toLocal())}",
+                                  style: TextStyle(
+                                    fontSize: fontSize3,
+                                    fontFamily: arabicFont,
                                     color:
                                         const Color.fromRGBO(254, 249, 205, 1),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(.5, .5),
+                                        blurRadius: 1.0,
+                                        color: Color.fromRGBO(6, 87, 96, 1),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "العصر",
+                                      style: TextStyle(
+                                        fontSize: fontSize3,
+                                        fontFamily: arabicFont,
+                                        color: const Color.fromRGBO(
+                                            254, 249, 205, 1),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(.5, .5),
+                                            blurRadius: 1.0,
+                                            color: Color.fromRGBO(6, 87, 96, 1),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      isAsr
+                                          ? Icons.notifications_active_outlined
+                                          : Icons.notifications_off_outlined,
+                                      size: fontSize3,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
@@ -455,61 +512,94 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             color: const Color.fromRGBO(254, 249, 205, 1),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isTimePresenter
-                                    ? "${timePresenter(prayerTimes.maghrib!.toLocal())}"
-                                    : "${DateFormat.Hm().format(prayerTimes.maghrib!.toLocal())}",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "المغرب",
-                                    style: TextStyle(
-                                      fontSize: fontSize3,
-                                      fontFamily: arabicFont,
-                                      color: const Color.fromRGBO(
-                                          254, 249, 205, 1),
-                                      shadows: const [
-                                        Shadow(
-                                          offset: Offset(.5, .5),
-                                          blurRadius: 1.0,
-                                          color: Color.fromRGBO(6, 87, 96, 1),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    FlutterIslamicIcons.prayingPerson,
-                                    size: fontSize3,
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              box.write("isMaghrib", !isMaghrib);
+                            });
+
+                            isMaghrib
+                                ? await awesomeNotificationManager
+                                    .addCustomDailyReminder(
+                                        id: 3,
+                                        title: "القرآن الكريم",
+                                        body: "حان الان موعد اذان المغرب",
+                                        time: Time(
+                                          prayerTimes.maghrib!.hour,
+                                          prayerTimes.maghrib!.minute,
+                                        ),
+                                        payload: "المغرب")
+                                : await awesomeNotificationManager
+                                    .cancelNotificationById(id: 3);
+                            // ? NotificationService.instance()
+                            //     .scheduledNotification(
+                            //     notificationId: 3,
+                            //     title: "القرآن الكريم",
+                            //     body: "حان الان موعد اذان المغرب",
+                            //     appointmentTime: prayerTimes.maghrib!,
+                            //   )
+                            // : await NotificationService.instance()
+                            //     .cancel(3);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  isTimePresenter
+                                      ? "${timePresenter(prayerTimes.maghrib!.toLocal())}"
+                                      : "${DateFormat.Hm().format(prayerTimes.maghrib!.toLocal())}",
+                                  style: TextStyle(
+                                    fontSize: fontSize3,
+                                    fontFamily: arabicFont,
                                     color:
                                         const Color.fromRGBO(254, 249, 205, 1),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(.5, .5),
+                                        blurRadius: 1.0,
+                                        color: Color.fromRGBO(6, 87, 96, 1),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "المغرب",
+                                      style: TextStyle(
+                                        fontSize: fontSize3,
+                                        fontFamily: arabicFont,
+                                        color: const Color.fromRGBO(
+                                            254, 249, 205, 1),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(.5, .5),
+                                            blurRadius: 1.0,
+                                            color: Color.fromRGBO(6, 87, 96, 1),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      isMaghrib
+                                          ? Icons.notifications_active_outlined
+                                          : Icons.notifications_off_outlined,
+                                      size: fontSize3,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
@@ -520,61 +610,85 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             color: const Color.fromRGBO(254, 249, 205, 1),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 30,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                isTimePresenter
-                                    ? "${timePresenter(prayerTimes.isha!.toLocal())}"
-                                    : "${DateFormat.Hm().format(prayerTimes.isha!.toLocal())}",
-                                style: TextStyle(
-                                  fontSize: fontSize3,
-                                  fontFamily: arabicFont,
-                                  color: const Color.fromRGBO(254, 249, 205, 1),
-                                  shadows: const [
-                                    Shadow(
-                                      offset: Offset(.5, .5),
-                                      blurRadius: 1.0,
-                                      color: Color.fromRGBO(6, 87, 96, 1),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "العشاء",
-                                    style: TextStyle(
-                                      fontSize: fontSize3,
-                                      fontFamily: arabicFont,
-                                      color: const Color.fromRGBO(
-                                          254, 249, 205, 1),
-                                      shadows: const [
-                                        Shadow(
-                                          offset: Offset(.5, .5),
-                                          blurRadius: 1.0,
-                                          color: Color.fromRGBO(6, 87, 96, 1),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    FlutterIslamicIcons.prayingPerson,
-                                    size: fontSize3,
+                        TextButton(
+                          onPressed: () async {
+                            setState(() {
+                              box.write("isIsha", !isIsha);
+                            });
+
+                            isIsha
+                                ? awesomeNotificationManager
+                                    .addCustomDailyReminder(
+                                        id: 4,
+                                        title: "القرآن الكريم",
+                                        body: "حان الان موعد اذان العشاء",
+                                        time: Time(
+                                          prayerTimes.isha!.hour,
+                                          prayerTimes.isha!.minute,
+                                        ),
+                                        payload: "العشاء")
+                                : await awesomeNotificationManager
+                                    .cancelNotificationById(id: 4);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 30,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  isTimePresenter
+                                      ? "${timePresenter(prayerTimes.isha!.toLocal())}"
+                                      : "${DateFormat.Hm().format(prayerTimes.isha!.toLocal())}",
+                                  style: TextStyle(
+                                    fontSize: fontSize3,
+                                    fontFamily: arabicFont,
                                     color:
                                         const Color.fromRGBO(254, 249, 205, 1),
+                                    shadows: const [
+                                      Shadow(
+                                        offset: Offset(.5, .5),
+                                        blurRadius: 1.0,
+                                        color: Color.fromRGBO(6, 87, 96, 1),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "العشاء",
+                                      style: TextStyle(
+                                        fontSize: fontSize3,
+                                        fontFamily: arabicFont,
+                                        color: const Color.fromRGBO(
+                                            254, 249, 205, 1),
+                                        shadows: const [
+                                          Shadow(
+                                            offset: Offset(.5, .5),
+                                            blurRadius: 1.0,
+                                            color: Color.fromRGBO(6, 87, 96, 1),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Icon(
+                                      isIsha
+                                          ? Icons.notifications_active_outlined
+                                          : Icons.notifications_off_outlined,
+                                      size: fontSize3,
+                                      color: const Color.fromRGBO(
+                                          254, 249, 205, 1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
