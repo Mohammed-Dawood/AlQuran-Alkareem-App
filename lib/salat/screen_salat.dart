@@ -357,8 +357,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,8 +445,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -550,8 +548,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -653,8 +650,7 @@ class _ScreenSalatState extends State<ScreenSalat> {
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 30,
+                              horizontal: 20,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
