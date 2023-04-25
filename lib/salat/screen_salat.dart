@@ -10,7 +10,8 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:quran_app/controller/constant.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
-import 'package:quran_app/utils/awesome_notification_manager.dart';
+
+import '../utils/local_notification_manager.dart';
 
 class ScreenSalat extends StatefulWidget {
   const ScreenSalat({super.key});
@@ -253,17 +254,17 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isFajr
-                                ? await awesomeNotificationManager
-                                    .addCustomDailyReminder(
-                                        id: 0,
-                                        title: "القرآن الكريم",
-                                        body: "حان الان موعد اذان الفجر",
-                                        time: Time(
-                                          prayerTimes.fajr!.hour,
-                                          prayerTimes.fajr!.minute,
-                                        ),
-                                        payload: "الفجر")
-                                : await awesomeNotificationManager
+                                ? await NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 0,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان الفجر",
+                                    time: Time(
+                                      prayerTimes.fajr!.hour,
+                                      prayerTimes.fajr!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
                                     .cancelNotificationById(id: 0);
                           },
                           child: Padding(
@@ -341,17 +342,17 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isDhuhr
-                                ? await awesomeNotificationManager
-                                    .addCustomDailyReminder(
-                                        id: 1,
-                                        title: "القرآن الكريم",
-                                        body: "حان الان موعد اذان الظهر",
-                                        time: Time(
-                                          prayerTimes.dhuhr!.hour,
-                                          prayerTimes.dhuhr!.minute,
-                                        ),
-                                        payload: "الظهر")
-                                : await awesomeNotificationManager
+                                ? await NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 1,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان الظهر",
+                                    time: Time(
+                                      prayerTimes.dhuhr!.hour,
+                                      prayerTimes.dhuhr!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
                                     .cancelNotificationById(id: 1);
                           },
                           child: Padding(
@@ -430,17 +431,17 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isAsr
-                                ? await awesomeNotificationManager
-                                    .addCustomDailyReminder(
-                                        id: 2,
-                                        title: "القرآن الكريم",
-                                        body: "حان الان موعد اذان العصر",
-                                        time: Time(
-                                          prayerTimes.asr!.hour,
-                                          prayerTimes.asr!.minute,
-                                        ),
-                                        payload: "العصر")
-                                : await awesomeNotificationManager
+                                ? await NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 2,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان العصر",
+                                    time: Time(
+                                      prayerTimes.asr!.hour,
+                                      prayerTimes.asr!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
                                     .cancelNotificationById(id: 2);
                           },
                           child: Padding(
@@ -518,27 +519,33 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               box.write("isMaghrib", !isMaghrib);
                             });
 
+                            // isMaghrib
+                            //     ? await NotificationService()
+                            //         .showNotificationWithSound(
+                            //             "title", " test now ")
+                            //     : null;
+
                             isMaghrib
-                                ? await awesomeNotificationManager
-                                    .addCustomDailyReminder(
-                                        id: 3,
-                                        title: "القرآن الكريم",
-                                        body: "حان الان موعد اذان المغرب",
-                                        time: Time(
-                                          prayerTimes.maghrib!.hour,
-                                          prayerTimes.maghrib!.minute,
-                                        ),
-                                        payload: "المغرب")
-                                : await awesomeNotificationManager
+                                ? await NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 3,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان المغرب",
+                                    time: Time(
+                                      prayerTimes.maghrib!.hour,
+                                      prayerTimes.maghrib!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
                                     .cancelNotificationById(id: 3);
-                            // ? NotificationService.instance()
+                            // ? NotificationService().instance()
                             //     .scheduledNotification(
                             //     notificationId: 3,
                             //     title: "القرآن الكريم",
                             //     body: "حان الان موعد اذان المغرب",
                             //     appointmentTime: prayerTimes.maghrib!,
                             //   )
-                            // : await NotificationService.instance()
+                            // : await NotificationService().instance()
                             //     .cancel(3);
                           },
                           child: Padding(
@@ -617,17 +624,31 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isIsha
-                                ? awesomeNotificationManager
-                                    .addCustomDailyReminder(
-                                        id: 4,
-                                        title: "القرآن الكريم",
-                                        body: "حان الان موعد اذان العشاء",
-                                        time: Time(
-                                          prayerTimes.isha!.hour,
-                                          prayerTimes.isha!.minute,
-                                        ),
-                                        payload: "العشاء")
-                                : await awesomeNotificationManager
+                                ? await NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 4,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان العشاء",
+                                    time: Time(
+                                      prayerTimes.isha!.hour,
+                                      prayerTimes.isha!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
+                                    .cancelNotificationById(id: 4);
+
+                            isIsha
+                                ? NotificationService()
+                                    .scheduleDailyNotificationWithSound(
+                                    id: 4,
+                                    title: "القرآن الكريم",
+                                    body: "حان الان موعد اذان العشاء",
+                                    time: Time(
+                                      prayerTimes.isha!.hour,
+                                      prayerTimes.isha!.minute,
+                                    ),
+                                  )
+                                : await NotificationService()
                                     .cancelNotificationById(id: 4);
                           },
                           child: Padding(
