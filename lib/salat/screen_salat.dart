@@ -517,11 +517,11 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               box.write("isMaghrib", !isMaghrib);
                             });
 
-                            // isMaghrib
-                            //     ? await NotificationService()
-                            //         .showNotificationWithSound(
-                            //             "title", " test now ")
-                            //     : null;
+                            isMaghrib
+                                ? await NotificationService()
+                                    .showNotificationWithSound(
+                                        "title", " test now ")
+                                : null;
 
                             isMaghrib
                                 ? await NotificationService()
