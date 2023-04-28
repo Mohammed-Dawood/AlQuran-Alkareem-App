@@ -1,18 +1,17 @@
 import 'dart:developer';
-
-import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:get/get.dart';
+import 'package:quran_app/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:get/get.dart';
+import 'package:quran_app/theme/theme.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:quran_app/salat/home_salat.dart';
+import 'package:quran_app/controller/constant.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:quran_app/controller/constant.dart';
-import 'package:quran_app/home.dart';
-import 'package:quran_app/salat/home_salat.dart';
-import 'package:quran_app/theme/theme.dart';
-import 'package:quran_app/utils/local_notification_manager.dart';
+import 'package:quran_app/salat/utils/notification_manager.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +27,7 @@ void main() async {
         Permission.notification.request();
       }
     });
-    await NotificationService.initialize();
+    await NotificationManager.initialize();
   } catch (e) {
     log(e.toString());
   }

@@ -78,19 +78,22 @@ class _HomeQuranReadState extends State<HomeQuranRead> {
               duration: const Duration(seconds: 10),
               messageText: Directionality(
                 textDirection: TextDirection.rtl,
-                child: Text(
-                  "ليس لديك أي موقع محفوظ حالياً.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'quran',
-                    color: const Color.fromRGBO(254, 249, 205, 1),
-                    shadows: [
-                      Shadow(
-                        blurRadius: 1.0,
-                        offset: Offset(.5, .5),
-                        color: Color.fromRGBO(6, 87, 96, 1),
-                      )
-                    ],
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Text(
+                    "ليس لديك أي موقع محفوظ حالياً.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'quran',
+                      color: const Color.fromRGBO(254, 249, 205, 1),
+                      shadows: [
+                        Shadow(
+                          blurRadius: 1.0,
+                          offset: Offset(.5, .5),
+                          color: Color.fromRGBO(6, 87, 96, 1),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

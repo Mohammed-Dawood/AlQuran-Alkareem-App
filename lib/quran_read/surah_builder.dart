@@ -239,19 +239,22 @@ class _SurahBuilderState extends State<SurahBuilder> {
                 duration: const Duration(seconds: 10),
                 messageText: Directionality(
                   textDirection: TextDirection.rtl,
-                  child: Text(
-                    "اضغط في اي مكان على الشاشة لحفظ الموقع الذي وصلت إليه أثناء القراءة، حتى يتسنى لك الرجوع إليه في المستقبل.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'quran',
-                      color: const Color.fromRGBO(254, 249, 205, 1),
-                      shadows: [
-                        Shadow(
-                          blurRadius: 1.0,
-                          offset: Offset(.5, .5),
-                          color: Color.fromRGBO(6, 87, 96, 1),
-                        )
-                      ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Text(
+                      "اضغط في اي مكان على الشاشة لحفظ الموقع الذي وصلت إليه أثناء القراءة، حتى يتسنى لك الرجوع إليه في المستقبل.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'quran',
+                        color: const Color.fromRGBO(254, 249, 205, 1),
+                        shadows: [
+                          Shadow(
+                            blurRadius: 1.0,
+                            offset: Offset(.5, .5),
+                            color: Color.fromRGBO(6, 87, 96, 1),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

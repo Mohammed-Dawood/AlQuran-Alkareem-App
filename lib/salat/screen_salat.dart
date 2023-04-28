@@ -1,17 +1,16 @@
-import 'package:adhan_dart/adhan_dart.dart';
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:adhan_dart/adhan_dart.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:quran_app/controller/constant.dart';
 import 'package:quran_app/controller/loading_indicator.dart';
-
-import '../utils/local_notification_manager.dart';
+import 'package:quran_app/salat/utils/notification_manager.dart';
+import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 class ScreenSalat extends StatefulWidget {
   const ScreenSalat({super.key});
@@ -254,18 +253,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isFajr
-                                ? await NotificationService()
+                                ? await NotificationManager()
                                     .scheduleDailyNotificationWithSound(
                                     id: 0,
                                     title: "القرآن الكريم",
                                     body: "حان الان موعد اذان الفجر",
+                                    snackbarBody: "تفعيل  إشعار صلاة  الفجر",
                                     time: Time(
-                                      prayerTimes.fajr!.hour,
-                                      prayerTimes.fajr!.minute,
+                                      prayerTimes.fajr!.toLocal().hour,
+                                      prayerTimes.fajr!.toLocal().minute,
                                     ),
                                   )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 0);
+                                : await NotificationManager()
+                                    .cancelNotificationById(
+                                    id: 0,
+                                    title: "إلغاء إشعار صلاة  الفجر",
+                                  );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -342,18 +345,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isDhuhr
-                                ? await NotificationService()
+                                ? await NotificationManager()
                                     .scheduleDailyNotificationWithSound(
                                     id: 1,
                                     title: "القرآن الكريم",
                                     body: "حان الان موعد اذان الظهر",
+                                    snackbarBody: "تفعيل  إشعار صلاة  الظهر",
                                     time: Time(
-                                      prayerTimes.dhuhr!.hour,
-                                      prayerTimes.dhuhr!.minute,
+                                      prayerTimes.dhuhr!.toLocal().hour,
+                                      prayerTimes.dhuhr!.toLocal().minute,
                                     ),
                                   )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 1);
+                                : await NotificationManager()
+                                    .cancelNotificationById(
+                                    id: 1,
+                                    title: "إلغاء إشعار صلاة  الظهر",
+                                  );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -430,18 +437,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isAsr
-                                ? await NotificationService()
+                                ? await NotificationManager()
                                     .scheduleDailyNotificationWithSound(
                                     id: 2,
                                     title: "القرآن الكريم",
                                     body: "حان الان موعد اذان العصر",
+                                    snackbarBody: "تفعيل  إشعار صلاة  العصر",
                                     time: Time(
-                                      prayerTimes.asr!.hour,
-                                      prayerTimes.asr!.minute,
+                                      prayerTimes.asr!.toLocal().hour,
+                                      prayerTimes.asr!.toLocal().minute,
                                     ),
                                   )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 2);
+                                : await NotificationManager()
+                                    .cancelNotificationById(
+                                    id: 2,
+                                    title: "إلغاء إشعار صلاة  العصر",
+                                  );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -517,34 +528,31 @@ class _ScreenSalatState extends State<ScreenSalat> {
                               box.write("isMaghrib", !isMaghrib);
                             });
 
-                            isMaghrib
-                                ? await NotificationService()
-                                    .showNotificationWithSound(
-                                        "title", " test now ")
-                                : null;
+                            // isMaghrib
+                            //     ? await NotificationService()
+                            //         .showNotificationWithSound(
+                            //         "القرآن الكريم",
+                            //         "حان الان موعد اذان المغرب",
+                            //       )
+                            //     : null;
 
                             isMaghrib
-                                ? await NotificationService()
+                                ? await NotificationManager()
                                     .scheduleDailyNotificationWithSound(
                                     id: 3,
                                     title: "القرآن الكريم",
                                     body: "حان الان موعد اذان المغرب",
+                                    snackbarBody: "تفعيل  إشعار صلاة  المغرب",
                                     time: Time(
-                                      prayerTimes.maghrib!.hour,
-                                      prayerTimes.maghrib!.minute,
+                                      prayerTimes.maghrib!.toLocal().hour,
+                                      prayerTimes.maghrib!.toLocal().minute,
                                     ),
                                   )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 3);
-                            // ? NotificationService().instance()
-                            //     .scheduledNotification(
-                            //     notificationId: 3,
-                            //     title: "القرآن الكريم",
-                            //     body: "حان الان موعد اذان المغرب",
-                            //     appointmentTime: prayerTimes.maghrib!,
-                            //   )
-                            // : await NotificationService().instance()
-                            //     .cancel(3);
+                                : await NotificationManager()
+                                    .cancelNotificationById(
+                                    id: 3,
+                                    title: "إلغاء إشعار صلاة  المغرب",
+                                  );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -621,32 +629,22 @@ class _ScreenSalatState extends State<ScreenSalat> {
                             });
 
                             isIsha
-                                ? await NotificationService()
+                                ? await NotificationManager()
                                     .scheduleDailyNotificationWithSound(
                                     id: 4,
                                     title: "القرآن الكريم",
                                     body: "حان الان موعد اذان العشاء",
+                                    snackbarBody: "تفعيل  إشعار صلاة  العشاء",
                                     time: Time(
-                                      prayerTimes.isha!.hour,
-                                      prayerTimes.isha!.minute,
+                                      prayerTimes.isha!.toLocal().hour,
+                                      prayerTimes.isha!.toLocal().minute,
                                     ),
                                   )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 4);
-
-                            isIsha
-                                ? NotificationService()
-                                    .scheduleDailyNotificationWithSound(
+                                : await NotificationManager()
+                                    .cancelNotificationById(
                                     id: 4,
-                                    title: "القرآن الكريم",
-                                    body: "حان الان موعد اذان العشاء",
-                                    time: Time(
-                                      prayerTimes.isha!.hour,
-                                      prayerTimes.isha!.minute,
-                                    ),
-                                  )
-                                : await NotificationService()
-                                    .cancelNotificationById(id: 4);
+                                    title: "إلغاء إشعار صلاة  العشاء",
+                                  );
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
